@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><unload unload_date="2025-03-09 20:40:36">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+<application display_value="Global">global</application>
+<application_name>Global</application_name>
+<application_scope>global</application_scope>
+<application_version/>
+<collisions/>
+<commit_date/>
+<deleted/>
+<description/>
+<inserted/>
+<name>Copy field name</name>
+<origin_sys_id/>
+<parent display_value=""/>
+<release_date/>
+<remote_base_update_set display_value=""/>
+<remote_parent_id/>
+<remote_sys_id>60c6297f8344261025f1e330ceaad343</remote_sys_id>
+<state>loaded</state>
+<summary/>
+<sys_class_name>sys_remote_update_set</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2025-03-09 20:40:36</sys_created_on>
+<sys_id>abe0b9bb8384261025f1e330ceaad360</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2025-03-09 20:40:36</sys_updated_on>
+<update_set display_value=""/>
+<update_source display_value=""/>
+<updated/>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sys_ui_macro_79ea26e7c0a801653920d443c4d98701</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="sys_ui_macro"&gt;&lt;sys_ui_macro action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;category&gt;general&lt;/category&gt;&lt;description&gt;Context menu for a field (element) on a form&lt;/description&gt;&lt;media_type/&gt;&lt;name&gt;element_context&lt;/name&gt;&lt;scoped_name/&gt;&lt;sys_class_name&gt;sys_ui_macro&lt;/sys_class_name&gt;&lt;sys_created_by&gt;myla.jordan&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2011-01-12 11:09:04&lt;/sys_created_on&gt;&lt;sys_id&gt;79ea26e7c0a801653920d443c4d98701&lt;/sys_id&gt;&lt;sys_mod_count&gt;87&lt;/sys_mod_count&gt;&lt;sys_name&gt;element_context&lt;/sys_name&gt;&lt;sys_package display_value="UI Pages (define HTML pages and their processing)" source="com.glide.ui_page"&gt;4f17f671b803121087dea78263ad9ce4&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_ui_macro_79ea26e7c0a801653920d443c4d98701&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2025-03-09 20:39:15&lt;/sys_updated_on&gt;&lt;xml&gt;&lt;![CDATA[&lt;?xml version="1.0" encoding="utf-8" ?&gt;
+&lt;j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null"&gt;
+  &lt;script&gt;
+    var table = "${sysparm_table}";
+    var id = "${sysparm_id}";
+    var type = "${sysparm_type}";
+    var choice = "${sysparm_choice}";
+    var count = 0;
+
+    var gcm = new GwtContextMenu('context_personalize_menu');
+    gcm.setTableName('${ref}');
+    gcm.clear();
+
+    &lt;g:evaluate var="jvar_personalize_dictionary" expression="gs.hasRole('personalize_dictionary')" /&gt;
+    &lt;g:evaluate var="jvar_personalize_styles" expression="gs.hasRole('personalize_styles')" /&gt;
+    &lt;g:evaluate var="jvar_personalize_security" expression="gs.hasRole('security_admin')" /&gt;
+    &lt;g:evaluate var="jvar_show_security" expression="gs.hasRightsTo('ui/configure.personalize_security/write', null)" /&gt;
+    &lt;g:evaluate var="jvar_personalize_responses" expression="gs.hasRole('personalize_responses')" /&gt;
+    &lt;g:evaluate var="jvar_personalize_choices" expression="gs.hasRole('personalize_choices')" /&gt;
+    &lt;g:evaluate var="jvar_field_parts" object="true" jelly="true"&gt;
+        var fieldParts = jelly.sysparm_id.substring(jelly.sysparm_table.length + 1).split('.');
+    &lt;/g:evaluate&gt;
+    &lt;g:evaluate var="jvar_table_dot_do" jelly="true"&gt;
+        var tableDo = 'sys_dictionary.do';
+        // see if our parent is named 'var__m_...', 
+        // in which case we are a variable and need to use the correct .do
+        if (fieldParts.length &gt; 1) {
+            var parentName = fieldParts[fieldParts.length - 2];
+            if (parentName.indexOf('var__m_') == 0) {
+                var gr = new GlideRecord('sys_dictionary');
+                gr.setDisplayFields(['sys_class_name']);
+                gr.addQuery('name', parentName);
+                gr.addQuery('element', fieldParts[fieldParts.length - 1]);
+                gr.query();
+                if (gr.next())
+                    tableDo = gr.sys_class_name + ".do";
+            }
+        }
+        tableDo;
+    &lt;/g:evaluate&gt;
+    &lt;g:evaluate var="jvar_field_name"&gt;
+        fieldParts[fieldParts.length -1];
+    &lt;/g:evaluate&gt;
+    &lt;j:if test="${jvar_personalize_dictionary == true }"&gt;
+        gcm.addHref("${JS:gs.getMessage('Configure Label')}", 
+            "personalizeField('" + id + "', 'sys_documentation.do');");
+        gcm.addHref("${JS:gs.getMessage('Configure Dictionary')}", 
+            "personalizeField('" + id + "', '" + '${jvar_table_dot_do}' + "');");
+        count = 1;
+    &lt;/j:if&gt;
+    &lt;j:if test="${jvar_personalize_styles == true }"&gt;
+        gcm.addHref("${JS:gs.getMessage('Configure Styles')}",
+            "showList('sys_ui_style', 'name.element', '" + id + "');");
+        count = 1;
+    &lt;/j:if&gt;
+    &lt;j:if test="${sysparm_contextual_security == true}"&gt;
+       &lt;j:if test="${jvar_personalize_security == true}"&gt;
+          gcm.addHref("${JS:gs.getMessage('Configure Security')}", 
+              "personalizeSecurity('" + table + "', '" + id + "');");
+          count = 1;
+       &lt;/j:if&gt;
+       &lt;j:if test="${jvar_show_security == true}"&gt;
+          gcm.addHref("${JS:gs.getMessage('Show Security Rules')}",
+              "listSecurity('" + table + "', '" + id + "');");
+          count = 1;
+       &lt;/j:if&gt;
+    &lt;/j:if&gt;
+	// Custom option -&gt; Copy field name
+	&lt;j:if test="${gs.hasRole('admin')}"&gt;
+		gcm.addLine();
+		gcm.addHref("Copy field name","navigator.clipboard.writeText('${jvar_field_name}');")
+	&lt;/j:if&gt;
+    if ((choice != 0 ${AND} type != 'sys_class_name') || type == 'choice') {
+        var disabled = needSubDisabled(table, id);
+        if (count != 0)
+            gcm.addLine();
+
+        if (type.substring(0, 7) == 'journal') {
+            &lt;j:if test="${jvar_personalize_responses == true }"&gt;
+                var c = gcm.addHref("${JS:gs.getMessage('Configure Responses')}",
+                    "personalizeResponses('" + id + "');");
+
+                if (disabled == true)
+                    gcm._dullItem(c);
+
+                count = 1;
+            &lt;/j:if&gt;
+        } else {
+            &lt;g:evaluate var="jvar_personalize_choices_rights"&gt;
+                var url = 'record/' + '${sysparm_table}' + '.' + '${jvar_field_name}' + '/personalize_choices';
+                GlideSecurityManager.get().hasRightsTo(url, gs.getUser());
+            &lt;/g:evaluate&gt;
+            &lt;j:if test="${jvar_personalize_choices == true || jvar_personalize_choices_rights == true }"&gt;
+                var c = gcm.addHref("${JS:gs.getMessage('Configure Choices')}",
+                    "personalizeChoices('" + id + "');");
+                if (disabled == true)
+                    gcm._dullItem(c);
+
+                count = 1;
+            &lt;/j:if&gt;
+            &lt;j:if test="${jvar_personalize_choices == true }"&gt;
+                gcm.addHref("${JS:gs.getMessage('Show Choice List')}",
+                    "showList('sys_choice', 'name.element', '" + id + "');");
+                count = 1;
+            &lt;/j:if&gt;
+        }
+    }
+    &lt;j:if test="${jvar_personalize_dictionary == true }" &gt;
+        gcm.addLine();
+        gcm.addHref("${JS:gs.getMessage('Show')}" + " - '" + '${jvar_field_name}' + "'",
+            "showDictionary('" + table + "', '" + id + "');");
+        count = 1;
+    &lt;/j:if&gt;
+
+    if(showWatchMenu(true) == true) {
+        gcm.addHref("${JS:gs.getMessage('Watch')}" + " - '" + '${jvar_field_name}' + "'", "showWatchField('" + id + "');");
+        count = 1;
+    }
+
+    if(showWatchMenu(false) == true) {
+        gcm.addHref("${JS:gs.getMessage('Unwatch')}" + " - '" + '${jvar_field_name}' + "'", "clearWatchField('" + id + "');");
+        count = 1;
+    }
+
+    if (count == 0)
+        gcm = null;
+
+    function needSubDisabled(table, id) {
+        var dep = $('ni.dependent_reverse.' + id);
+        if (dep ${AND} dep.value) {
+            var p = dep.value;
+            var d = table + "." + p;
+            p = $(d);
+            if (p ${AND} p.value == '')
+                return true;
+        }
+    
+        return false;
+    }
+
+    function isWatch() {
+        if (type == 'password' || type == 'password2' || type == 'glide_encrypted')
+            return false;
+        var isOpticsPluginActive = ${pm.isActive('com.snc.optics_inspector')}; 
+        //Debug icon will be displayed for admin or admin impersonated users
+        var isAdmin = ${new GlideImpersonate().canImpersonate(gs.getUserID())};
+        if (isOpticsPluginActive ${AND} isAdmin) {
+            var el = $('label.' + id);
+            if (el ${AND} !hasClassName(el, 'foreign'))
+                return true;
+        }
+        return false;
+    }
+
+    function showWatchMenu(showWatch) {
+        var flag = false;
+
+        if (!isWatch())
+            return flag;
+
+        // We're checking document location against top to see if the full real estate is available
+        // or if we're isolated in a single page (Field Watcher panel not available).
+        if (top.document.location.href == document.location.href)
+            return flag;
+
+        // The field watcher isn't supported in polaris
+        if (typeof(isPolarisWrapper) === "function" ${AND} isPolarisWrapper())
+            return flag;
+
+        var isWatchActive = ('${sysparm_id}' === '${gs.getSession().getWatchField()}') ? true : false;
+        if (showWatch ${AND} !isWatchActive)
+            flag = true;
+        else if (!showWatch ${AND} isWatchActive)
+            flag = true;
+
+        return flag;
+    }
+
+  &lt;/script&gt;
+&lt;/j:jelly&gt;]]&gt;&lt;/xml&gt;&lt;/sys_ui_macro&gt;&lt;/record_update&gt;</payload>
+<payload_hash>-1039322506</payload_hash>
+<remote_update_set display_value="Copy field name">abe0b9bb8384261025f1e330ceaad360</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2025-03-09 20:40:36</sys_created_on>
+<sys_id>efe0b9bb8384261025f1e330ceaad360</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_recorded_at>1957ca223320000001</sys_recorded_at>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2025-03-09 20:40:36</sys_updated_on>
+<table/>
+<target_name>element_context</target_name>
+<type>Macro</type>
+<update_domain>global</update_domain>
+<update_guid>f790fdf78584261052f7ac76520a69cd</update_guid>
+<update_guid_history>f790fdf78584261052f7ac76520a69cd:-1039322506,77ce213bb784261040c6cc386b9ac955:585559116,3c9eedf71e842610c5352edbd3452ad6:-1782759521,ce3ee1b3e984261058645e7d016c94cb:1019959762,0e3ee1b31d8426106ab2e605237ba4c9:461973259</update_guid_history>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+</unload>
