@@ -20,10 +20,10 @@ This project extends the **ServiceNow** form label context menu by adding an opt
 
 ## 📂 Installation
 
-1. **Open ServiceNow** and navigate to **System UI > UI Macros**.
-2. Create a new UI Macro named **context_personalize_menu**.
-3. Copy and paste the code from [`context_personalize_menu.xml`](context_personalize_menu.xml).
-4. Save the changes and test it in a form.
+1. **Download the update set** from the repository.
+2. **Import the update set** into your ServiceNow instance.
+3. **Commit the update set** to apply the changes.
+4. Test the functionality in a form.
 
 ---
 
@@ -33,22 +33,6 @@ This project extends the **ServiceNow** form label context menu by adding an opt
 2. **Right-click on a field label**.
 3. **Select "Copy Field Name"**.
 4. The field name will be copied automatically to the clipboard.
-
----
-
-## 🛠 Customization
-If you want to modify the functionality, you can edit the `copyFieldName()` function in the UI Macro:
-```javascript
-function copyFieldName(fieldName) {
-    var tempInput = document.createElement("input");
-    tempInput.value = fieldName;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-    alert("Field name copied: " + fieldName);
-}
-```
 
 ---
 
